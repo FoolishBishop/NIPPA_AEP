@@ -91,5 +91,5 @@ while True:
     print("y rotation: ", get_y_rotation(acc_x, acc_y, acc_z))
 
     # a lo mejor aprovecho y meto en un .txt
-    archive.write(f"ACC {Ax, Ay, Az}; GYRO {Gx, Gy, Gz}")  # ojala se entienda
+    archive.write(f"ACC {Ax, Ay, Az}; GYRO {Gx, Gy, Gz}\n")  # ojala se entienda
     sleep(3)
