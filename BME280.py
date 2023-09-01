@@ -27,3 +27,5 @@ def getPressure():
 def getAltitude():
     return altitude
 
+def getAll():
+    return temperature, humidity, pressure, altitude
