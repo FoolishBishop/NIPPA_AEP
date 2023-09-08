@@ -32,4 +32,5 @@ def getAltitude():
 def getAll():
     return temperature, humidity, pressure, altitude
 
-println(datos = getAll())
+datos = getAll()
+println(datos)
