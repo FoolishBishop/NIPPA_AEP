@@ -3,8 +3,8 @@ import shutil
 import time
 import os
 
-from ICM20948 import *
-from BME280 import *
+from sensors.ICM20948 import *
+from sensors.BME280 import *
 
 class Sensors(ICM20948, BME280):
     def __init__(self):
