@@ -39,9 +39,9 @@ class Sensors(ICM20948, BME280):
         p2.join()        
         
         #get data
-        temperature, humidity, pressure, altitude = p1.get()
+        temperature, humidity, pressure, altitude = self.bme_queue.get()
         
-        ax,ay,az,gx,gy,gz,bx,by,bz = p2.get()
+        ax,ay,az,gx,gy,gz,bx,by,bz = self.icm_queue.get()
         
         #into the csv file
         with open("data/data.csv","a") as file:
