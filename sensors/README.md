@@ -10,7 +10,7 @@ def __init__(self):
     ...
 def get_data_<sensor_name>(self):
     #gets the data from sensor
-    return <data>
+    self.<sensor_name>_queue.put(<data>)
 def display_data_<sensor_name>(self): #optional
     #print functions to display data
 ```
