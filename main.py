@@ -1,9 +1,12 @@
 import multiprocessing as mp
+import os
 
 from ICM20948 import *
 from BME280 import *
 
 if __name__ == '__main__':
+    #Creates data directory
+    os.makedirs('data', exist_ok=True)
     #define sensors
     bme = BME280()
     icm = ICM20948()
