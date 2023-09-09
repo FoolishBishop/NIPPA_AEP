@@ -9,8 +9,8 @@ from sensors.BME280 import *
 class Sensors(ICM20948, BME280):
     def __init__(self):
         #Call the constructors of all sensors
+        super().__init__()
         super(BME280, self).__init__()
-        super(ICM20948, self).__init__()
 
         """
         If you want to add sensors:
