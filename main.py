@@ -1,12 +1,12 @@
 import multiprocessing as mp
 
 from ICM20948 import *
-from BME280_1 import *
+from BME280 import *
 
 if __name__ == '__main__':
     #define sensors
     bme = BME280()
-    icm = ICM_20948()
+    icm = ICM20948()
     while True:
         #write to csv file in parallel
         p1 = mp.Process(target = bme.to_csv())
