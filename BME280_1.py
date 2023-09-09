@@ -5,8 +5,8 @@ from csv import writer
 class BME280():
     def __init__(self):
         ##CONFIGURATION VARIABLES
-        i2c = board.I2C()   # uses board.SCL and board.SDA
-        self.sensor = adafruit_bme280.Adafruit_BME280_I2C(i2c)
+        self.i2c = board.I2C()   # uses board.SCL and board.SDA
+        self.sensor = adafruit_bme280.Adafruit_BME280_I2C(self.i2c)
         self.sensor.sea_level_pressure = 1013.25 # change this to match the location's pressure (hPa) at sea level
     def get_data(self):
         temperature = self.sensor.temperature
@@ -20,8 +20,8 @@ class BME280():
         print("Pressure: %0.1f hPa" % self.sensor.pressure)
         print("Altitude = %0.2f meters" % self.sensor.altitude)
     def to_csv(self):
+        temperature, humidity, pressure, altitude = self.get_data()
         with open("data/thpa.csv","a") as f_object:
             writer_object = writer(f_object)
-            temperature, humidity, pressure, altitude = self.get_data()
             writer_object.writerow([temperature, humidity, pressure, altitude])
             f_object.close()
