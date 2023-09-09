@@ -19,7 +19,7 @@ class BME280():
         print("Humidity: %0.1f %%" % self.sensor.relative_humidity)
         print("Pressure: %0.1f hPa" % self.sensor.pressure)
         print("Altitude = %0.2f meters" % self.sensor.altitude)
-    def write_to_csv(self):
+    def to_csv(self):
         with open("data/thpa.csv","a") as f_object:
             writer_object = writer(f_object)
             temperature, humidity, pressure, altitude = self.get_data()
