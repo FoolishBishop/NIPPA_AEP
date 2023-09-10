@@ -1,23 +1,17 @@
-# notas importantes:
-# conexion.execute("insert into articulos(descripcion,precio) values (?,?)", ("bananas", 25))
-# conexion.commit()
-# conexion.close()  <- FALTA ESE
-
-def find_names_columns(conection, table):
-    cursor = conection.cursor()
-    cursor.execute(f"SELECT * FROM {table}")
-    return cursor.column_names()  # tupla de los nombres
-
-
-def load_values(conection, table, values_tupple):
-    columns = ",".join(find_names_columns(conection, table))
-    int_sign = ("?," * len(values_tupple))[:-1]
-    conection.execute(f"insert into {table}({columns}) values ({int_sign}", values_tupple)
-    conection.commit()
-    conection.close()
+def load_values(connection, table, column_names_tuple, values_tuple):
+    cursor = connection.cursor()
+    insert_w_param = f"""INSERT INTO {table}
+                      ({", ".join(column_names_tuple)}) 
+                      VALUES ({("?," * len(values_tuple))[:-1]});"""
+    cursor.execute(insert_w_param, values_tuple)
+    connection.commit()
+    connection.close()
 
 
-def read_values(conection, table, column_value, value):
-    cursor = conection.cursor()
-    cursor.execute(f"SELECT * FROM {table} WHERE {column_value} = {value}")
-    return cursor.fetchone()  # tuple de toda la fila
+def read_values(conection, table, column_value, value, desired_values_columns_tuple):
+    des_col = ", ".join(desired_values_columns_tuple)
+    cursor = conection.execute(f"SELECT {des_col} "
+                               f"FROM {table} "
+                               f"WHERE {column_value}=?", (value,))
+    if cursor.fetchone() is not None:
+        return cursor.fetchone()
