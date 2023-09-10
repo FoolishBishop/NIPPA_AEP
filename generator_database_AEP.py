@@ -1,7 +1,7 @@
 import sqlite3
 
-conexion = sqlite3.connect("nippa_sensors.db")
-conexion.execute("""create table if not exists ICM20948 (
+connection = sqlite3.connect("nippa_sensors.db")
+connection.execute("""create table if not exists ICM20948 (
                           ID integer primary key AUTOINCREMENT,
                           time text,
                           ax text,
@@ -14,7 +14,7 @@ conexion.execute("""create table if not exists ICM20948 (
                           by text,
                           bz text                                                    
                     )""")
-conexion.execute("""create table if not exists BME280 (
+connection.execute("""create table if not exists BME280 (
                           ID integer primary key AUTOINCREMENT,
                           time text,
                           temp text,
