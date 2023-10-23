@@ -1,31 +1,24 @@
 import sqlite3
 
-conexion = sqlite3.connect("nippa_sensors.db")
-conexion.execute("""create table if not exists Accelerometer_MPU6050 (
+connection = sqlite3.connect("nippa_sensors.db")
+connection.execute("""create table if not exists ICM20948 (
                           ID integer primary key AUTOINCREMENT,
                           time text,
-                          Bx text,
-                          By text,
-                          Ax text,
-                          Ay text,
-                          Az text,
-                          Gx text,
-                          Gy text,
-                          Gz text                          
+                          ax text,
+                          ay text,
+                          az text,
+                          gx text,
+                          gy text,
+                          gz text,
+                          bx text,
+                          by text,
+                          bz text                                                    
                     )""")
-conexion.execute("""create table if not exists Temperature_MS8607 (
+connection.execute("""create table if not exists BME280 (
                           ID integer primary key AUTOINCREMENT,
                           time text,
                           temp text,
                           humidity text,
-                          pressure text                    
+                          pressure text,
+                          altitude text                    
                     )""")
-conexion.execute("""create table if not exists UV_table (
-                          ID integer primary key AUTOINCREMENT,
-                          time text,
-                          UV text
-                    )""")
-
-conexion.close()
-
-# revisar si son todos esos datos
