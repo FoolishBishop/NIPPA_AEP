@@ -5,12 +5,12 @@ import os
 
 from sensors.ICM20948 import *
 from sensors.BME280 import *
+from lora.lora import *
 
-class Sensors(ICM20948, BME280):
+class Sensors(ICM20948, BME280, LORA):
     def __init__(self):
         #Call the constructors of all sensors
-        ICM20948.__init__(self)
-        BME280.__init__(self)
+        super(Sensors, self).__init__()
         """
         If you want to add sensors:
         super(<sensor_class>, self).__init__(paramters if exists)
@@ -42,9 +42,13 @@ class Sensors(ICM20948, BME280):
         
         ax,ay,az,gx,gy,gz,bx,by,bz = self.icm_queue.get()
         
+        data = f'{time.time()-self.time},{temperature},{humidity},{pressure},{altitude},{ax},{ay},{az},{gx},{gy},{gz},{bx},{by},{bz}'
+
+        self.send_data(data)
+        
         #into the csv file
         with open("data/data.csv","a") as file:
-            file.write(f'{time.time()-self.time},{temperature},{humidity},{pressure},{altitude},{ax},{ay},{az},{gx},{gy},{gz},{bx},{by},{bz}\n')
+            file.write(data+'\n')
 
 if __name__ == '__main__':
     #Creates data directory
