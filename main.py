@@ -10,7 +10,9 @@ from lora.lora import *
 class Sensors(ICM20948, BME280, LORA):
     def __init__(self):
         #Call the constructors of all sensors
-        super(Sensors, self).__init__()
+        ICM20948.__init__()
+        BME280.__init__()
+        LORA.__init__()
         """
         If you want to add sensors:
         super(<sensor_class>, self).__init__(paramters if exists)
@@ -45,7 +47,7 @@ class Sensors(ICM20948, BME280, LORA):
         data = f'{time.time()-self.time},{temperature},{humidity},{pressure},{altitude},{ax},{ay},{az},{gx},{gy},{gz},{bx},{by},{bz}'
 
         self.send_data(data)
-        
+
         #into the csv file
         with open("data/data.csv","a") as file:
             file.write(data+'\n')
