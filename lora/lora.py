@@ -23,7 +23,7 @@ import adafruit_ssd1306
 import adafruit_rfm9x
 
 class LORA:
-    def __init__(self)
+    def __init__(self):
         # Create the I2C interface.
         i2c = busio.I2C(board.SCL, board.SDA)
 
@@ -33,11 +33,11 @@ class LORA:
         spi = busio.SPI(board.SCK, MOSI=board.MOSI, MISO=board.MISO)
         self.sender = adafruit_rfm9x.RFM9x(spi, CS, RESET, 915.0)
         self.sender.tx_power = 23
-    def send_data(self,data: str)
+    def send_data(self,data: str):
         lista = data.split(',')
         for idx, k in enumerate(lista):
             lista[idx] = round(float(k), ndigits = 3)
 
         button_a_data = bytes(str(lista),"utf-8")
         
-        rfm9x.send(button_a_data)
+        self.sender.send(button_a_data)
