@@ -9,7 +9,7 @@ from sensors.PICAMERA import *
 from lora.lora import *
 
 
-class Sensors(ICM20948, BME280, LORA):
+class Sensors(ICM20948, BME280, LORA, PICAMERA):
     def __init__(self):
         #Call the constructors of all sensors
         ICM20948.__init__(self)
@@ -53,7 +53,7 @@ class Sensors(ICM20948, BME280, LORA):
         self.send_data(data)
 
         #into the csv file
-        with open("data/data.csv","a") as file:
+        with open("data/csv/data.csv","a") as file:
             file.write(data+'\n')
 
 
@@ -61,28 +61,22 @@ if __name__ == '__main__':
     timer = time.time()
     #Creates data directory
     try:
-        os.makedirs('data', exist_ok=False)
+        os.makedirs('data/csv', exist_ok=False)
     except FileExistsError:
         #shoots down the directory if already exists and recreates it
-        shutil.rmtree('data')
-        os.makedirs('data')
+        shutil.rmtree('data/csv')
+        os.makedirs('data/csv')
     #Creates sensors object
     sensors = Sensors()
     
-    p1 = mp.Process(target = sensors.get_data_camera)
-
-    p1.start()
-    
-    p1.join()
-    
+    i=0
     while True:
+        i +=1
+        p1 = mp.Process(target = sensors.get_data_camera, args =(i))
         p2 = mp.Process(target = sensors.to_csv)
 
+        p1.start()
         p2.start()
-        
+
+        p1.join()
         p2.join()  
-
-        if time.time() - timer > 3*3600:
-            
-
-            
