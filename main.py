@@ -72,7 +72,7 @@ if __name__ == '__main__':
     i=0
     while True:
         i +=1
-        p1 = mp.Process(target = sensors.get_data_camera, args =(i))
+        p1 = mp.Process(target = sensors.get_data_camera, args =(i,))
         p2 = mp.Process(target = sensors.to_csv)
 
         p1.start()
