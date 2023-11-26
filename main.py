@@ -5,7 +5,9 @@ import os
 
 from sensors.ICM20948 import *
 from sensors.BME280 import *
+from sensors.PICAMERA import *
 from lora.lora import *
+
 
 class Sensors(ICM20948, BME280, LORA):
     def __init__(self):
@@ -13,6 +15,7 @@ class Sensors(ICM20948, BME280, LORA):
         ICM20948.__init__(self)
         BME280.__init__(self)
         LORA.__init__(self)
+        PICAMERA.__init__(self)
         """
         If you want to add sensors:
         super(<sensor_class>, self).__init__(paramters if exists)
@@ -29,6 +32,7 @@ class Sensors(ICM20948, BME280, LORA):
         with open("data/data.csv","a") as file:
              file.write('time,Temperature,Humidity,Pressure,Altitude,Ax,Ay,Az,Gx,Gy,Gz,Bx,By,Bz\n')
     def to_csv(self):
+
         #Creates subprocesses in parallel
         p1 = mp.Process(target = self.get_data_bme)
         p2 = mp.Process(target = self.get_data_icm)
@@ -52,7 +56,9 @@ class Sensors(ICM20948, BME280, LORA):
         with open("data/data.csv","a") as file:
             file.write(data+'\n')
 
+
 if __name__ == '__main__':
+    timer = time.time()
     #Creates data directory
     try:
         os.makedirs('data', exist_ok=False)
@@ -62,6 +68,21 @@ if __name__ == '__main__':
         os.makedirs('data')
     #Creates sensors object
     sensors = Sensors()
+    
+    p1 = mp.Process(target = sensors.get_data_camera)
+
+    p1.start()
+    
+    p1.join()
+    
     while True:
-        #returns the data into .csv format
-        sensors.to_csv()
+        p2 = mp.Process(target = sensors.to_csv)
+
+        p2.start()
+        
+        p2.join()  
+
+        if time.time() - timer > 3*3600:
+            
+
+            
