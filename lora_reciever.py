@@ -12,7 +12,7 @@ class Receiver:
         CS = DigitalInOut(board.CE1)
         RESET = DigitalInOut(board.D25)
         spi = busio.SPI(board.SCK, MOSI=board.MOSI, MISO=board.MISO)
-        self.receiver = adafruit_rfm9x.RFM9X(spi, CS, RESET, 915.0)
+        self.receiver = adafruit_rfm9x.RFM9x(spi, CS, RESET, 915.0)
         self.receiver.tx_power = 23
         prev_packet = None
         os.makedirs('data', exist_ok = True)
