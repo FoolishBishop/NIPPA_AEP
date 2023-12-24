@@ -13,7 +13,10 @@ from lora.lora import *
 class Sensors(ICM20948, BME280, LORA, PICAMERA):
     def __init__(self):
         #Call the constructors of all sensors
-        super(Sensors, self).__init__()
+        ICM20948.__init__()
+        BME280.__init__()
+        LORA.__init__()
+        PICAMERA.__init__()
         """
         If you want to add sensors:
         super(<sensor_class>, self).__init__(paramters if exists)
