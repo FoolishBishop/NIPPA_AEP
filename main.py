@@ -2,6 +2,7 @@ import multiprocessing as mp
 import shutil
 import time
 import os
+import datetime
 
 from sensors.ICM20948 import *
 from sensors.BME280 import *
@@ -25,11 +26,12 @@ class Sensors(ICM20948, BME280, LORA, PICAMERA):
         """
         #for cronometer porpuses
         self.time = time.time()
-        os.makedirs('data/csv', exist_ok=True)
-        os.makedirs('data/video', exist_ok=True)
+        self.date = datetime.now().strftime("%Y-%m-%d-%H-%M")
+        os.makedirs(f'{self.date}/csv', exist_ok=True)
+        os.makedirs(f'{self.date}/video', exist_ok=True)
 
         #Creates the columns for our data
-        with open(f"{self.time}/csv/data.csv","a") as file:
+        with open(f"{self.date}/csv/data.csv","a") as file:
              file.write('time,Temperature,Humidity,Pressure,Altitude,Ax,Ay,Az,Gx,Gy,Gz,Bx,By,Bz\n')
     def to_csv(self):
 
@@ -53,7 +55,7 @@ class Sensors(ICM20948, BME280, LORA, PICAMERA):
         self.send_data(data)
 
         #into the csv file
-        with open(f"{self.time}/csv/data.csv","a") as file:
+        with open(f"{self.date}/csv/data.csv","a") as file:
             file.write(data+'\n')
 
 

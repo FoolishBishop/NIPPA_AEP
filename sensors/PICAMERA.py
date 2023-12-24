@@ -7,5 +7,5 @@ class PICAMERA:
     def get_data_camera(self, name):
         with picamera.PiCamera() as camera:
             camera.resolution = (512,512)
-            camera.capture(f'{self.time}/video/' + str(name) + '.jpg')
+            camera.capture(f'{self.date}/video/' + str(name) + '.jpg')
             camera.close()
