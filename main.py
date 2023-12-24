@@ -12,10 +12,7 @@ from lora.lora import *
 class Sensors(ICM20948, BME280, LORA, PICAMERA):
     def __init__(self):
         #Call the constructors of all sensors
-        ICM20948.__init__(self)
-        BME280.__init__(self)
-        LORA.__init__(self)
-        PICAMERA.__init__(self)
+        super(Sensors, self).__init__()
         """
         If you want to add sensors:
         super(<sensor_class>, self).__init__(paramters if exists)
@@ -28,8 +25,11 @@ class Sensors(ICM20948, BME280, LORA, PICAMERA):
         """
         #for cronometer porpuses
         self.time = time.time()
+        os.makedirs('data/csv', exist_ok=True)
+        os.makedirs('data/video', exist_ok=True)
+
         #Creates the columns for our data
-        with open("data/data.csv","a") as file:
+        with open(f"{self.time}/csv/data.csv","a") as file:
              file.write('time,Temperature,Humidity,Pressure,Altitude,Ax,Ay,Az,Gx,Gy,Gz,Bx,By,Bz\n')
     def to_csv(self):
 
@@ -53,20 +53,11 @@ class Sensors(ICM20948, BME280, LORA, PICAMERA):
         self.send_data(data)
 
         #into the csv file
-        with open("data/csv/data.csv","a") as file:
+        with open(f"{self.time}/csv/data.csv","a") as file:
             file.write(data+'\n')
 
 
 if __name__ == '__main__':
-    timer = time.time()
-    #Creates data directory
-    try:
-        os.makedirs('data/csv', exist_ok=False)
-    except FileExistsError:
-        #shoots down the directory if already exists and recreates it
-        shutil.rmtree('data/csv')
-        os.makedirs('data/csv')
-    #Creates sensors object
     sensors = Sensors()
     
     i=0
