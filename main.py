@@ -1,8 +1,8 @@
+from datetime import datetime
 import multiprocessing as mp
 import shutil
 import time
 import os
-import datetime
 
 from sensors.ICM20948 import *
 from sensors.BME280 import *
