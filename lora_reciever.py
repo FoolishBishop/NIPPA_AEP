@@ -44,7 +44,7 @@ class Receiver:
             received_data = [float(value) for value in packet_text.split(',')][1:]
             timestamp = dt.datetime.now().strftime('%H:%M:%S.%f')[:-3]
 
-            for idx, value in enumerate(received_data):
+            for idx, value in enumerate(self.data_keys):
                 self.plot_data(value, timestamp, received_data[idx])
 
             with open('data/data.csv', 'a') as file:
@@ -64,4 +64,6 @@ class Receiver:
 
 if __name__ == '__main__':
     receiver = Receiver()
-    receiver.receive()
+    while True:
+        receiver.receive()
+        time.sleep(0.7)
