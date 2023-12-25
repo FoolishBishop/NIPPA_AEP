@@ -1,6 +1,7 @@
 from adafruit_bme280 import basic as adafruit_bme280
 import multiprocessing as mp
 import board
+
 class BME280():
     def __init__(self):
         ##CONFIGURATION VARIABLES

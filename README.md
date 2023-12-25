@@ -1,2 +1,3 @@
-# NIPPA_AEP
-repositorio para todo lo relacionado con el proyecto de la Agencia Espacial del Paraguay del CJP
+# NIPPA
+## 1ra Competencia de Plataformas Estratosfericas - AEP
+## Payload content

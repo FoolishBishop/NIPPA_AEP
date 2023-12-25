@@ -1,6 +1,7 @@
 import adafruit_icm20x
 import board
 import multiprocessing as mp
+
 class ICM20948():
     def __init__(self):
         self.i2c = board.I2C()
