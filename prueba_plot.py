@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import datetime as dt
 from lora_reciever import Receiver
-
+from multiprocessing import Process
 x = []
 y = []
 
@@ -31,9 +31,22 @@ def animate(i,x,y, index: int, boundary: tuple):
 
         plt.xticks(rotation=45)
 
-ani = FuncAnimation(fig, animate, interval=100, repeat=False, fargs=(x,y,0, (0,60)))
-ani = FuncAnimation(fig, animate, interval=100, repeat=False, fargs=(x,y,1, (0,1000)))
-ani = FuncAnimation(fig, animate, interval=100, repeat=False, fargs=(x,y,0, (0,20000)))
-ani = FuncAnimation(fig, animate, interval=100, repeat=False, fargs=(x,y,0, (0,200)))
+if __name__ == '__main__':
+    # Create processes for each animation
+    processes = [
+        Process(target=FuncAnimation(fig, animate, interval=100, repeat=False, fargs=(x,y,0, (0,60)))),
+        Process(target=FuncAnimation(fig, animate, interval=100, repeat=False, fargs=(x,y,1, (0,1000)))),
+        Process(target=FuncAnimation(fig, animate, interval=100, repeat=False, fargs=(x,y,0, (0,20000)))),
+        Process(target=FuncAnimation(fig, animate, interval=100, repeat=False, fargs=(x,y,0, (0,200))))
+    ]
 
-plt.show()
+    # Start each process
+    for process in processes:
+        process.start()
+
+    # Join all processes to ensure they complete before exiting
+    for process in processes:
+        process.join()
+
+    # Display any necessary plots or visuals after animations are done
+    plt.show()
