@@ -56,7 +56,7 @@ class Receiver:
             self.axes[idx].lines[0].set_ydata(self.axes[idx].lines[0].get_ydata() + [value])
 
     def showAnim(self):
-        ani = animation.FuncAnimation(list(self.figs)[0], self.animate, interval=500)
+        ani = animation.FuncAnimation(list(self.figs), self.animate, interval=500)
         plt.show()
 
 
