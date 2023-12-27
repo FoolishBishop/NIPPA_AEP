@@ -19,7 +19,7 @@ class Receiver:
         self.receiver.tx_power = 23
         os.makedirs('data', exist_ok=True)
 
-        self.figures = {}  
+        self.figs = {}  
         self.axes = {}     
 
         self.data_keys = ['Temperature', 'Humidity', 'Pressure', 'Altitude', 
@@ -27,15 +27,15 @@ class Receiver:
                           'Gyroscope_X', 'Gyroscope_Y', 'Gyroscope_Z',
                           'Magnetic_X', 'Magnetic_Y', 'Magnetic_Z']
         # Initialize plots for each data type
-        for keys in self.data_keys:
-            self.init_plot(keys, f'{keys}', f'{keys} over Time')
+        for idx, key in enumerate(self.data_keys):
+            self.init_plot(idx, f'{key}', f'{key} over Time')
 
-    def init_plot(self, key, ylabel, title):
-        self.figures[key], self.axes[key] = plt.subplots(2,4, figsize= (20,8))
-        self.axes[key].set_ylabel(ylabel)
-        self.axes[key].set_title(title)
-        self.axes[key].tick_params(rotation=45, ha='right')
-        self.axes[key].legend()
+    def init_plot(self, idx, ylabel, title):
+        self.figs, self.axes = plt.subplots(3,5, figsize= (20,8))
+        self.axes[idx].set_ylabel(ylabel)
+        self.axes[idx].set_title(title)
+        self.axes[idx].tick_params(rotation=45, ha='right')
+        self.axes[idx].legend()
 
     def animate(self, i):
         packet = self.receiver.receive()
@@ -58,7 +58,7 @@ class Receiver:
             self.axes[key].lines[0].set_ydata(self.axes[key].lines[0].get_ydata() + [value])
 
     def showAnim(self):
-        ani = animation.FuncAnimation(list(self.figures.values())[0], self.animate, interval=500)
+        ani = animation.FuncAnimation(list(self.figs.values())[0], self.animate, interval=500)
         plt.show()
 
 
