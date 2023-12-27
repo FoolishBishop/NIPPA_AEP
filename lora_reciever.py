@@ -50,13 +50,13 @@ class Receiver:
 
     def plot_data(self, idx, key, timestamp, value):
         if key in self.axes:
-            if key not in self.axes[key].lines:
+            if key not in self.axes[idx].lines:
                 self.axes[idx].plot([], [], label=key)
             self.axes[idx].lines[0].set_xdata(self.axes[idx].lines[0].get_xdata() + [timestamp])
             self.axes[idx].lines[0].set_ydata(self.axes[idx].lines[0].get_ydata() + [value])
 
     def showAnim(self):
-        ani = animation.FuncAnimation(list(self.figs), self.animate, interval=500)
+        ani = animation.FuncAnimation(self.figs, self.animate, interval=500)
         plt.show()
 
 
