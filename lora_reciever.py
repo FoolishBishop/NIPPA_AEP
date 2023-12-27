@@ -19,7 +19,7 @@ class Receiver:
         self.receiver.tx_power = 23
         os.makedirs('data', exist_ok=True)
 
-        self.figs, self.axes = plt.subplots(13,1, figsize= (20,8))
+        self.figs, self.axes = plt.subplots(len(self.data_keys),1, figsize= (20,8))
 
 
         self.data_keys = ['Temperature', 'Humidity', 'Pressure', 'Altitude', 
@@ -33,7 +33,7 @@ class Receiver:
     def init_plot(self, idx, ylabel, title):
         self.axes[idx].set_ylabel(ylabel)
         self.axes[idx].set_title(title)
-        self.axes[idx].tick_params(rotation=45, ha='right')
+        self.axes[idx].tick_params(rotation=45)
         self.axes[idx].legend()
 
     def animate(self, i):
