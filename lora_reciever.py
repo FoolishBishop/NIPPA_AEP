@@ -19,8 +19,8 @@ class Receiver:
         self.receiver.tx_power = 23
         os.makedirs('data', exist_ok=True)
 
-        self.figs = {}  
-        self.axes = {}     
+        self.figs, self.axes = plt.subplots(13,1, figsize= (20,8))
+
 
         self.data_keys = ['Temperature', 'Humidity', 'Pressure', 'Altitude', 
                           'Acceleration_X', 'Acceleration_Y', 'Acceleration_Z',
@@ -31,7 +31,6 @@ class Receiver:
             self.init_plot(idx, f'{key}', f'{key} over Time')
 
     def init_plot(self, idx, ylabel, title):
-        self.figs, self.axes = plt.subplots(3,5, figsize= (20,8))
         self.axes[idx].set_ylabel(ylabel)
         self.axes[idx].set_title(title)
         self.axes[idx].tick_params(rotation=45, ha='right')
