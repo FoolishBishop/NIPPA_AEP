@@ -43,20 +43,20 @@ class Receiver:
             timestamp = dt.datetime.now().strftime('%H:%M:%S.%f')[:-3]
 
             for idx, value in enumerate(self.data_keys):
-                self.plot_data(value, timestamp, received_data[idx])
+                self.plot_data(idx, value, timestamp, received_data[idx])
 
             with open('data/data.csv', 'a') as file:
                 file.write(packet_text + '\n')
 
-    def plot_data(self, key, timestamp, value):
+    def plot_data(self, idx, key, timestamp, value):
         if key in self.axes:
             if key not in self.axes[key].lines:
-                self.axes[key].plot([], [], label=key)
-            self.axes[key].lines[0].set_xdata(self.axes[key].lines[0].get_xdata() + [timestamp])
-            self.axes[key].lines[0].set_ydata(self.axes[key].lines[0].get_ydata() + [value])
+                self.axes[idx].plot([], [], label=key)
+            self.axes[idx].lines[0].set_xdata(self.axes[idx].lines[0].get_xdata() + [timestamp])
+            self.axes[idx].lines[0].set_ydata(self.axes[idx].lines[0].get_ydata() + [value])
 
     def showAnim(self):
-        ani = animation.FuncAnimation(list(self.figs.values())[0], self.animate, interval=500)
+        ani = animation.FuncAnimation(list(self.figs)[0], self.animate, interval=500)
         plt.show()
 
 
