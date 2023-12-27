@@ -25,7 +25,7 @@ def animate(i,x,y, index):
         x = x[-20:]
         y = y[-20:]
         ax.clear()
-        ax.plot(x,y[index])
+        ax.plot(x,y)
         ax.set_title(f'{names[index]} over time')
         ax.set_ylim(boundary[index])
 
