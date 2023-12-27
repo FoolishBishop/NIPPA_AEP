@@ -33,5 +33,5 @@ def animate(i,x,y, index):
 
 x = []
 y = []
-anim = FuncAnimation(fig, animate, interval=100, repeat=False, fargs=(x,y, 0))
+anim = FuncAnimation(fig, animate, interval=100, repeat=False, fargs=(x,y, 3))
 plt.show()
