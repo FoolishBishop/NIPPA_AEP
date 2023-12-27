@@ -23,37 +23,34 @@ class Receiver:
                           'Acceleration_X', 'Acceleration_Y', 'Acceleration_Z',
                           'Gyroscope_X', 'Gyroscope_Y', 'Gyroscope_Z',
                           'Magnetic_X', 'Magnetic_Y', 'Magnetic_Z']
-        self.figs, self.axes = plt.subplots(len(self.data_keys),1, figsize= (10,100))
+        self.figs, self.axes = plt.subplots(len(self.data_keys),1, figsize= (5,50))
         
         # Initialize plots for each data type
         for idx, key in enumerate(self.data_keys):
-            self.init_plot(idx, f'{key}', f'{key} over Time')
-
-    def init_plot(self, idx, ylabel, title):
-        self.axes[idx].set_ylabel(ylabel)
-        self.axes[idx].set_title(title)
-        self.axes[idx].tick_params(rotation=45)
-        self.axes[idx].legend()
+            self.axes[idx].set_ylabel(f'{key}')
+            self.axes[idx].set_title(f'{key} over Time')
+            self.axes[idx].tick_params(rotation=45)
 
     def animate(self, i):
         packet = self.receiver.receive()
         if packet is not None:
-            packet_text = str(packet, 'utf-8')
+            packet_text = str(packet, 'utf-8')[1:-1]
             received_data = [float(value) for value in packet_text.split(',')][1:]
             timestamp = dt.datetime.now().strftime('%H:%M:%S.%f')[:-3]
 
-            for idx, value in enumerate(self.data_keys):
-                self.plot_data(idx, value, timestamp, received_data[idx])
+            for idx, key in enumerate(self.data_keys):
+                self.plot_data(idx, key, timestamp, received_data[idx])
 
             with open('data/data.csv', 'a') as file:
                 file.write(packet_text + '\n')
 
     def plot_data(self, idx, key, timestamp, value):
         self.axes[idx].clear()
-        if key in self.axes:
-            if key not in self.axes[idx].lines:
-                self.axes[idx].plot([], [], label=key)
-            self.axes[idx].plot(value, timestamp)
+        self.axes[idx].plot(timestamp, value)
+        # if key in self.axes:
+        #     if key not in self.axes[idx].lines:
+        #         self.axes[idx].plot([], [], label=key)
+        #     self.axes[idx].plot(timestamp, value)
             # self.axes[idx].lines[0].set_xdata(self.axes[idx].lines[0].get_xdata() + [timestamp])
             # self.axes[idx].lines[0].set_ydata(self.axes[idx].lines[0].get_ydata() + [value])
 
