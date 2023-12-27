@@ -18,15 +18,15 @@ def animate(i,x,y):
         data = [float(values) for values in packet.split(',')]
         altitude = data[3]
     
-    x.append(dt.datetime.now().strftime('%H:%M:%S'))
-    y.append(altitude)
+        x.append(dt.datetime.now().strftime('%H:%M:%S'))
+        y.append(altitude)
 
-    x = x[-20:]
-    y = y[-20:]
+        x = x[-20:]
+        y = y[-20:]
 
-    ax.clear()
-    ax.plot(x,y)
-    plt.xticks(rotation=45)
+        ax.clear()
+        ax.plot(x,y)
+        plt.xticks(rotation=45)
 
 ani = FuncAnimation(fig, animate, interval=1000, repeat=False, fargs=(x,y))
 
