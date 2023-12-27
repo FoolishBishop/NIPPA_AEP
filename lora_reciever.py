@@ -23,7 +23,7 @@ class Receiver:
                           'Acceleration_X', 'Acceleration_Y', 'Acceleration_Z',
                           'Gyroscope_X', 'Gyroscope_Y', 'Gyroscope_Z',
                           'Magnetic_X', 'Magnetic_Y', 'Magnetic_Z']
-        self.figs, self.axes = plt.subplots(len(self.data_keys),1, figsize= (20,8))
+        self.figs, self.axes = plt.subplots(len(self.data_keys),1, figsize= (10,100))
         
         # Initialize plots for each data type
         for idx, key in enumerate(self.data_keys):
@@ -56,7 +56,7 @@ class Receiver:
             self.axes[idx].lines[0].set_ydata(self.axes[idx].lines[0].get_ydata() + [value])
 
     def showAnim(self):
-        ani = animation.FuncAnimation(self.figs, self.animate, interval=500)
+        ani = animation.FuncAnimation(self.figs, self.animate, interval=1000)
         plt.show()
 
 
