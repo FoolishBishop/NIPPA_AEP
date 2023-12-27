@@ -25,13 +25,13 @@ class Receiver:
         self.data_keys = ['Temperature', 'Humidity', 'Pressure', 'Altitude', 
                           'Acceleration_X', 'Acceleration_Y', 'Acceleration_Z',
                           'Gyroscope_X', 'Gyroscope_Y', 'Gyroscope_Z',
-                          'Magnetic_X', 'Magnetic_Y', 'Magnetic_Z',]
+                          'Magnetic_X', 'Magnetic_Y', 'Magnetic_Z']
         # Initialize plots for each data type
         for keys in self.data_keys:
             self.init_plot(keys, f'{keys}', f'{keys} over Time')
 
     def init_plot(self, key, ylabel, title):
-        self.figures[key], self.axes[key] = plt.subplots()
+        self.figures[key], self.axes[key] = plt.subplots(2,4, figsize= (20,8))
         self.axes[key].set_ylabel(ylabel)
         self.axes[key].set_title(title)
         self.axes[key].tick_params(rotation=45, ha='right')
@@ -57,13 +57,11 @@ class Receiver:
             self.axes[key].lines[0].set_xdata(self.axes[key].lines[0].get_xdata() + [timestamp])
             self.axes[key].lines[0].set_ydata(self.axes[key].lines[0].get_ydata() + [value])
 
-    def receive(self):
+    def showAnim(self):
         ani = animation.FuncAnimation(list(self.figures.values())[0], self.animate, interval=500)
         plt.show()
 
 
 if __name__ == '__main__':
     receiver = Receiver()
-    while True:
-        receiver.receive()
-        time.sleep(0.7)
+    receiver.showAnim()
