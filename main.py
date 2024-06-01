@@ -9,7 +9,7 @@ from sensors.PICAMERA import *
 from lora.lora import *
 
 
-class Sensors(ICM20948, BME280, LORA, PICAMERA):
+class Sensors(ICM20948, BME280, LORA, PICAMERA): 
     def __init__(self):
         #Call the constructors of all sensors
         ICM20948.__init__(self)
