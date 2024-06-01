@@ -1,0 +1,21 @@
+trainer:
+  logger: true
+  enable_checkpointing: true
+  max_epochs: 250
+  accelerator: cuda
+  devices:  1
+  precision: 32
+  
+model:
+  class_path: utils.LinearConstrastiveLearning
+  dict_kwargs:
+    lr: 2e-2
+    optimizer: adam
+    
+data:
+  class_path: utils.CosmicModule
+  dict_kwargs:
+    batch_size: 12
+    pin_memory: true
+    num_workers: 8
+
