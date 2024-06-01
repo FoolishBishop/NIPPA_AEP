@@ -9,9 +9,9 @@ from sensors.PICAMERA import *
 from lora.lora import *
 
 
-class Sensors(ICM20948, BME280, LORA, PICAMERA): 
+class Sensors(ICM20948, BME280, LORA, PICAMERA):
     def __init__(self):
-        #Call the constructors of all sensors
+        # Call the constructors of all sensors
         ICM20948.__init__(self)
         BME280.__init__(self)
         LORA.__init__(self)
@@ -26,52 +26,55 @@ class Sensors(ICM20948, BME280, LORA, PICAMERA):
 
         you are ready to go
         """
-        #for cronometer porpuses
+        # for cronometer porpuses
         self.time = time.time()
         self.date = datetime.now().strftime("%Y-%m-%d-%H-%M")
-        os.makedirs(f'/home/pi/Desktop/NIPPA_AEP/{self.date}/csv', exist_ok=True)
-        os.makedirs(f'/home/pi/Desktop/NIPPA_AEP/{self.date}/video', exist_ok=True)
+        os.makedirs(f"/home/pi/Desktop/NIPPA_AEP/{self.date}/csv", exist_ok=True)
+        os.makedirs(f"/home/pi/Desktop/NIPPA_AEP/{self.date}/video", exist_ok=True)
 
-        #Creates the columns for our data
-        with open(f"/home/pi/Desktop/NIPPA_AEP/{self.date}/csv/data.csv","a") as file:
-             file.write('time,Temperature,Humidity,Pressure,Altitude,Ax,Ay,Az,Gx,Gy,Gz,Bx,By,Bz\n')
+        # Creates the columns for our data
+        with open(f"/home/pi/Desktop/NIPPA_AEP/{self.date}/csv/data.csv", "a") as file:
+            file.write(
+                "time,Temperature,Humidity,Pressure,Altitude,Ax,Ay,Az,Gx,Gy,Gz,Bx,By,Bz\n"
+            )
+
     def to_csv(self):
 
-        #Creates subprocesses in parallel
-        p1 = mp.Process(target = self.get_data_bme)
-        p2 = mp.Process(target = self.get_data_icm)
+        # Creates subprocesses in parallel
+        p1 = mp.Process(target=self.get_data_bme)
+        p2 = mp.Process(target=self.get_data_icm)
 
         p1.start()
         p2.start()
-        
+
         p1.join()
-        p2.join()        
-        
-        #get data
+        p2.join()
+
+        # get data
         temperature, humidity, pressure, altitude = self.bme_queue.get()
-        
-        ax,ay,az,gx,gy,gz,bx,by,bz = self.icm_queue.get()
-        
-        data = f'{time.time()-self.time},{temperature},{humidity},{pressure},{altitude},{ax},{ay},{az},{gx},{gy},{gz},{bx},{by},{bz}'
+
+        ax, ay, az, gx, gy, gz, bx, by, bz = self.icm_queue.get()
+
+        data = f"{time.time()-self.time},{temperature},{humidity},{pressure},{altitude},{ax},{ay},{az},{gx},{gy},{gz},{bx},{by},{bz}"
 
         self.send_data(data)
 
-        #into the csv file
-        with open(f"/home/pi/Desktop/NIPPA_AEP/{self.date}/csv/data.csv","a") as file:
-            file.write(data+'\n')
+        # into the csv file
+        with open(f"/home/pi/Desktop/NIPPA_AEP/{self.date}/csv/data.csv", "a") as file:
+            file.write(data + "\n")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sensors = Sensors()
-    
-    i=0
+
+    i = 0
     while True:
-        i +=1
-        p1 = mp.Process(target = sensors.get_data_camera, args =(i,))
-        p2 = mp.Process(target = sensors.to_csv)
+        i += 1
+        p1 = mp.Process(target=sensors.get_data_camera, args=(i,))
+        p2 = mp.Process(target=sensors.to_csv)
 
         p1.start()
         p2.start()
 
         p1.join()
-        p2.join()  
+        p2.join()
