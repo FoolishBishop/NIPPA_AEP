@@ -9,6 +9,7 @@ import os
 
 class PICAMERA(Sensor):
     def __init__(self, root_path: str) -> None:
+        super().__init__()
         self.columns = None
         self.camera = picamera.PiCamera()
         self.camera.resolution = (512, 512)
