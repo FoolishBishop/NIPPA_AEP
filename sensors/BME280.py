@@ -6,6 +6,7 @@ from _base import Sensor
 
 class BME280(Sensor):
     def __init__(self):
+        super().__init__()
         ##CONFIGURATION VARIABLES
         self.bme = adafruit_bme280.Adafruit_BME280_I2C(self.i2c)
         self.bme.sea_level_pressure = (
