@@ -6,6 +6,7 @@ from _base import Sensor
 
 class ICM20948(Sensor):
     def __init__(self):
+        super().__init__()
         self.icm = adafruit_icm20x.ICM20948(self.i2c)
         self.columns = ["Ax", "Ay", "Az", "Gx", "Gy", "Gz", "Bx", "By", "Bz"]
 
