@@ -2,79 +2,83 @@ from datetime import datetime
 import multiprocessing as mp
 import time
 import os
-
+from sensors._base import Sensor
 from sensors.ICM20948 import *
 from sensors.BME280 import *
 from sensors.PICAMERA import *
 from lora.lora import *
+from typing import Sequence, List, Any, Tuple
+from itertools import chain
+import argparse
 
 
-class Sensors(ICM20948, BME280, LORA, PICAMERA):
-    def __init__(self):
-        # Call the constructors of all sensors
-        ICM20948.__init__(self)
-        BME280.__init__(self)
-        LORA.__init__(self)
-        PICAMERA.__init__(self)
-        """
-        If you want to add sensors:
-        super(<sensor_class>, self).__init__(paramters if exists)
-
-        add a third process to to_csv and change the output into the csv file
-
-        change the column names on init constructor in order to match the new data
-
-        you are ready to go
-        """
+class Main:
+    def __init__(self, root_path: str) -> None:
         # for cronometer porpuses
         self.time = time.time()
         self.date = datetime.now().strftime("%Y-%m-%d-%H-%M")
-        os.makedirs(f"/home/pi/Desktop/NIPPA_AEP/{self.date}/csv", exist_ok=True)
-        os.makedirs(f"/home/pi/Desktop/NIPPA_AEP/{self.date}/video", exist_ok=True)
+        self.root_path = root_path
+        self.csv_path = f"{root_path}/{self.date}/csv/"
+        os.makedirs(self.csv_path, exist_ok=True)
+        os.makedirs(self.video_path, exist_ok=True)
+
+        self.sensors: Sequence[Sensor] = [ICM20948(), BME280(), PICAMERA(root_path)]
 
         # Creates the columns for our data
-        with open(f"/home/pi/Desktop/NIPPA_AEP/{self.date}/csv/data.csv", "a") as file:
+        with open(self.csv_path, "a") as file:
             file.write(
-                "time,Temperature,Humidity,Pressure,Altitude,Ax,Ay,Az,Gx,Gy,Gz,Bx,By,Bz\n"
+                ",".join(
+                    list(
+                        chain.from_iterable([sensor.columns for sensor in self.sensors])
+                    )
+                )
+                + "\n"
             )
 
-    def to_csv(self):
+        self.receptor = LORA()
 
-        # Creates subprocesses in parallel
-        p1 = mp.Process(target=self.get_data_bme)
-        p2 = mp.Process(target=self.get_data_icm)
+    def get_data(self) -> Tuple[float | Any]:
+        process: List[mp.Process] = []
+        tabular: List[float | Any] = [time.time() - self.time]
 
-        p1.start()
-        p2.start()
+        # Define process
+        for sensor in self.sensors:
+            process.append(mp.Process(target=sensor.get_data))
 
-        p1.join()
-        p2.join()
+        # start process
+        for proc in process:
+            proc.start()
 
-        # get data
-        temperature, humidity, pressure, altitude = self.bme_queue.get()
+        # join
+        for proc in process:
+            proc.join()
 
-        ax, ay, az, gx, gy, gz, bx, by, bz = self.icm_queue.get()
+        for sensor in self.sensors:
+            data = sensor.queue.get()
+            if not isinstance(data, np.array):
+                tabular.append(data)
+            else:
+                sensor.save_data(data)
 
-        data = f"{time.time()-self.time},{temperature},{humidity},{pressure},{altitude},{ax},{ay},{az},{gx},{gy},{gz},{bx},{by},{bz}"
+        return tuple(chain.from_iterable(tabular))
 
-        self.send_data(data)
-
-        # into the csv file
-        with open(f"/home/pi/Desktop/NIPPA_AEP/{self.date}/csv/data.csv", "a") as file:
+    def write(self, data: str) -> None:
+        with open(self.csv_root, "a") as file:
             file.write(data + "\n")
+
+    def __call__(self) -> None:
+        while True:
+            tabular_args = self.get_data()
+            data = ",".join(tabular_args)
+            self.receptor.send_data(data)
+            self.write(data)
 
 
 if __name__ == "__main__":
-    sensors = Sensors()
-
-    i = 0
-    while True:
-        i += 1
-        p1 = mp.Process(target=sensors.get_data_camera, args=(i,))
-        p2 = mp.Process(target=sensors.to_csv)
-
-        p1.start()
-        p2.start()
-
-        p1.join()
-        p2.join()
+    # Parse arguments
+    parser = argparse.ArgumentParser(description="Cloud Chamber program")
+    parser.add_argument("root", help="Storage path for data.")
+    args = parser.parse_args()
+    # Init program
+    main = Main(args.root)
+    main()
